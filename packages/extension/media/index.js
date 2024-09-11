@@ -1,12 +1,15 @@
-// TODO use virtual dom in  worker
+// TODO use virtual dom in worker
 
 const initialize = (content) => {
   const app = document.createElement('div')
   app.className = 'App'
 
-  const pre = document.createElement('pre')
-  pre.textContent = content
-  app.append(pre)
+  const output = document.createElement('div')
+  output.className = 'Output'
+  // TODO avoid using innerHTML, use virtual dom instead
+  output.innerHTML = content
+
+  app.append(output)
 
   document.body.append(app)
 }
