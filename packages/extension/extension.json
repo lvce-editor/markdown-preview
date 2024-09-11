@@ -1,0 +1,16 @@
+{
+  "id": "builtin.markdown-preview",
+  "name": "Media Preview",
+  "description": "Media Preview",
+  "browser": "src/mediaPreviewMain.ts",
+  "activation": ["onWebView:builtin.markdown-preview"],
+  "languages": [],
+  "webViews": [
+    {
+      "id": "builtin.markdown-preview",
+      "rpc": true,
+      "path": "media/index.html",
+      "selector": [".png", ".jpg", ".jpeg", ".avif", ".svg", ".gif", ".ico"]
+    }
+  ]
+}
