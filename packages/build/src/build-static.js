@@ -1,7 +1,7 @@
 import { replace } from '@lvce-editor/package-extension'
 import { exportStatic } from '@lvce-editor/shared-process'
-import { cp } from 'node:fs/promises'
-import path from 'node:path'
+import { cp, readFile, writeFile } from 'node:fs/promises'
+import path, { join } from 'node:path'
 import { root } from './root.js'
 
 await import('./build.js')
@@ -26,3 +26,9 @@ await replace({
   occurrence: 'src/markdownPreviewMain.ts',
   replacement: 'dist/markdownPreviewMain.js',
 })
+
+const webViewsPath = join(root, 'dist', commitHash, 'config', 'webViews.json')
+const extensionJsonPath = join(root, 'dist', commitHash, 'extensions', 'builtin.markdown-preview', 'extension.json')
+const extensionJsonContent = await readFile(extensionJsonPath, 'utf8')
+const extensionJson = JSON.parse(extensionJsonContent)
+await writeFile(webViewsPath, JSON.stringify(extensionJson.webViews, null, 2) + '\n')
