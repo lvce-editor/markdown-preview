@@ -31,5 +31,5 @@ const webViewsPath = join(root, 'dist', commitHash, 'config', 'webViews.json')
 const extensionJsonPath = join(root, 'dist', commitHash, 'extensions', 'builtin.markdown-preview', 'extension.json')
 const extensionJsonContent = await readFile(extensionJsonPath, 'utf8')
 const extensionJson = JSON.parse(extensionJsonContent)
-extensionJson.webViews[0].path = `${commitHash}/extensions/${extensionJson.webViews[0].path}`
+extensionJson.webViews[0].path = `${commitHash}/extensions/${extensionJson.id}/${extensionJson.webViews[0].path}`
 await writeFile(webViewsPath, JSON.stringify(extensionJson.webViews, null, 2) + '\n')
