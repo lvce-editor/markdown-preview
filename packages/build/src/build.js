@@ -48,7 +48,7 @@ const markedUrlPath = path.join(root, 'dist', 'markdown-preview-worker', 'src', 
 await replace({
   path: markedUrlPath,
   occurrence: `export const markedUrl = new URL('../../../node_modules/marked/lib/marked.esm.js', import.meta.url).toString()`,
-  replacement: `export const markedUrl = new URL('../third_party/marked.esm.js', import.meta.url).toString()`,
+  replacement: `export const markedUrl = new URL('../../third_party/marked.esm.js', import.meta.url).toString()`,
 })
 
 const assetDirPath = path.join(root, 'dist', 'src', 'parts', 'AssetDir', 'AssetDir.ts')
