@@ -1,12 +1,12 @@
 // TODO use virtual dom in  worker
 
-const initialize = () => {
+const initialize = (content) => {
   const app = document.createElement('div')
   app.className = 'App'
 
-  const heading = document.createElement('h1')
-  heading.textContent = 'hello from markdown preview'
-  app.append(heading)
+  const pre = document.createElement('pre')
+  pre.textContent = content
+  app.append(pre)
 
   document.body.append(app)
 }
