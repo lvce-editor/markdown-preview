@@ -10,7 +10,7 @@
       "id": "builtin.markdown-preview",
       "rpc": true,
       "path": "media/index.html",
-      "selector": [".png", ".jpg", ".jpeg", ".avif", ".svg", ".gif", ".ico"]
+      "selector": [".md"]
     }
   ]
 }
