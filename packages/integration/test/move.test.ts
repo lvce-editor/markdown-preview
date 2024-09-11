@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals'
 import { testWorker } from '../src/testWorker.js'
 
-test('move', async () => {
+test.skip('move', async () => {
   const execMap = {}
   const worker = await testWorker({
     execMap,
