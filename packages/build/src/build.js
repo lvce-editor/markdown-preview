@@ -31,6 +31,11 @@ fs.cpSync(join(mediaPreviewWorker, 'src'), join(root, 'dist', 'markdown-preview-
   recursive: true,
 })
 
+fs.copyFileSync(
+  join(root, 'packages', 'markdown-preview-worker', 'node_modules', 'marked', 'lib', 'marked.esm.js'),
+  join(root, 'dist', 'third_party', 'marked.esm.js'),
+)
+
 const workerUrlFilePath = path.join(root, 'dist', 'src', 'parts', 'MarkdownPreviewWorkerUrl', 'MarkdownPreviewWorkerUrl.ts')
 await replace({
   path: workerUrlFilePath,
