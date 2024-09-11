@@ -23,6 +23,6 @@ await cp(path.join(root, 'dist2'), path.join(root, 'dist', commitHash, 'extensio
 
 await replace({
   path: path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'),
-  occurrence: 'src/mediaPreviewMain.ts',
-  replacement: 'dist/mediaPreviewMain.js',
+  occurrence: 'src/markdownPreviewMain.ts',
+  replacement: 'dist/markdownPreviewMain.js',
 })

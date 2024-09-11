@@ -2,7 +2,6 @@
 // send and receive messages
 
 import { startWorker } from './startWorker.ts'
-import * as PolyFill from './polyfill.ts'
 
 export const testWorker = async ({ execMap }) => {
   const invocations = []
@@ -15,9 +14,6 @@ export const testWorker = async ({ execMap }) => {
       }
       throw new Error(`unknown command ${args[0]}`)
     },
-  }
-  for (const [key, value] of Object.entries(PolyFill)) {
-    globalThis[key] = value
   }
   const worker = await startWorker(rpc)
   return {

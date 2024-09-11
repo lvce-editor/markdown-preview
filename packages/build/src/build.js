@@ -31,11 +31,11 @@ fs.cpSync(join(mediaPreviewWorker, 'src'), join(root, 'dist', 'markdown-preview-
   recursive: true,
 })
 
-const workerUrlFilePath = path.join(root, 'dist', 'src', 'parts', 'MediaPreviewWorkerUrl', 'MediaPreviewWorkerUrl.ts')
+const workerUrlFilePath = path.join(root, 'dist', 'src', 'parts', 'MarkdownPreviewWorkerUrl', 'MarkdownPreviewWorkerUrl.ts')
 await replace({
   path: workerUrlFilePath,
-  occurrence: 'src/mediaPreviewWorkerMain.ts',
-  replacement: 'dist/mediaPreviewWorkerMain.js',
+  occurrence: 'src/markdownPreviewWorkerMain.ts',
+  replacement: 'dist/markdownPreviewWorkerMain.js',
 })
 
 const assetDirPath = path.join(root, 'dist', 'src', 'parts', 'AssetDir', 'AssetDir.ts')
@@ -47,16 +47,16 @@ await replace({
 
 await replace({
   path: join(root, 'dist', 'extension.json'),
-  occurrence: 'src/mediaPreviewMain.ts',
-  replacement: 'dist/mediaPreviewMain.js',
+  occurrence: 'src/markdownPreviewMain.ts',
+  replacement: 'dist/markdownPreviewMain.js',
 })
 
 await bundleJs(
-  join(root, 'dist', 'markdown-preview-worker', 'src', 'mediaPreviewWorkerMain.ts'),
-  join(root, 'dist', 'markdown-preview-worker', 'dist', 'mediaPreviewWorkerMain.js'),
+  join(root, 'dist', 'markdown-preview-worker', 'src', 'markdownPreviewWorkerMain.ts'),
+  join(root, 'dist', 'markdown-preview-worker', 'dist', 'markdownPreviewWorkerMain.js'),
 )
 
-await bundleJs(join(root, 'dist', 'src', 'mediaPreviewMain.ts'), join(root, 'dist', 'dist', 'mediaPreviewMain.js'))
+await bundleJs(join(root, 'dist', 'src', 'markdownPreviewMain.ts'), join(root, 'dist', 'dist', 'markdownPreviewMain.js'))
 
 await packageExtension({
   highestCompression: true,

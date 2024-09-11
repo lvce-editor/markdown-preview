@@ -1,4 +1,4 @@
-import * as MediaPreviewWorker from '../MediaPreviewWorker/MediaPreviewWorker.ts'
+import * as MediaPreviewWorker from '../MarkdownPreviewWorker/MarkdownPreviewWorker.ts'
 
 const previewId = 1
 
