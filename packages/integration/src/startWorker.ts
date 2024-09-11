@@ -5,7 +5,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const root = `${__dirname}/../../..`
 
-const workerPath = join(root, 'packages', 'markdown-preview-worker', 'src', 'mediaPreviewWorkerMain.ts')
+const workerPath = join(root, 'packages', 'markdown-preview-worker', 'src', 'markdownPreviewWorkerMain.ts')
 
 export const startWorker = async (rpc) => {
   const workerUrl = pathToFileURL(workerPath).toString()
