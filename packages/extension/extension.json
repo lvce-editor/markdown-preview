@@ -10,7 +10,21 @@
       "id": "builtin.markdown-preview",
       "rpc": true,
       "path": "media/index.html",
-      "selector": [".md"]
+      "selector": [".md"],
+      "elements": [
+        {
+          "type": "title",
+          "value": "Markdown Preview"
+        },
+        {
+          "type": "script",
+          "path": "media/index.js"
+        },
+        {
+          "type": "css",
+          "path": "media/index.css"
+        }
+      ]
     }
   ]
 }
