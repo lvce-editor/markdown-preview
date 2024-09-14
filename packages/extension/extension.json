@@ -22,6 +22,10 @@
         },
         {
           "type": "css",
+          "path": "media/markdown.css"
+        },
+        {
+          "type": "css",
           "path": "media/index.css"
         }
       ]
