@@ -8,7 +8,7 @@ export const launchMediaPreviewWorker = async () => {
   // @ts-ignore
   const rpc = await vscode.createRpc({
     url: MediaPreviewWorkerUrl.markdownPreviewWorkerUrl,
-    name: 'Media Preview Worker',
+    name: 'Markdown Preview Worker',
     execute,
   })
   return rpc

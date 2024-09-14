@@ -1,6 +1,6 @@
 {
   "id": "builtin.markdown-preview",
-  "name": "Media Preview",
+  "name": "Markdown Preview",
   "description": "Markdown Preview",
   "browser": "src/markdownPreviewMain.ts",
   "activation": ["onWebView:builtin.markdown-preview"],
