@@ -32,4 +32,5 @@ const extensionJsonPath = join(root, 'dist', commitHash, 'extensions', 'builtin.
 const extensionJsonContent = await readFile(extensionJsonPath, 'utf8')
 const extensionJson = JSON.parse(extensionJsonContent)
 extensionJson.webViews[0].path = `${commitHash}/extensions/${extensionJson.id}/${extensionJson.webViews[0].path}`
+extensionJson.webViews[0].remotePath = `/${commitHash}/extensions/${extensionJson.id}`
 await writeFile(webViewsPath, JSON.stringify(extensionJson.webViews, null, 2) + '\n')
