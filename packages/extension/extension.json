@@ -11,6 +11,13 @@
       "rpc": true,
       "path": "media/index.html",
       "selector": [".md"],
+      "contentSecurityPolicy": [
+        "default-src 'none'",
+        "script-src 'self'",
+        "style-src 'self'",
+        "img-src 'self'",
+        "media-src 'self'"
+      ],
       "elements": [
         {
           "type": "title",
