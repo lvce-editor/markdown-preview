@@ -1,6 +1,6 @@
 export const name = 'markdown-preview'
 
-export const test = async ({ FileSystem, Main, Editor, Locator, expect }) => {
+export const test = async ({ FileSystem, Main, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
