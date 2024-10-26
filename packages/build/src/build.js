@@ -4,7 +4,7 @@ import path, { dirname, join } from 'node:path'
 import { root } from './root.js'
 
 const extension = path.join(root, 'packages', 'extension')
-const mediaPreviewWorker = path.join(root, 'packages', 'markdown-preview-worker')
+const markdownPreviewWorker = path.join(root, 'packages', 'markdown-preview-worker')
 
 fs.rmSync(join(root, 'dist'), { recursive: true, force: true })
 
@@ -27,7 +27,7 @@ fs.cpSync(join(extension, 'media'), join(root, 'dist', 'media'), {
   recursive: true,
 })
 
-fs.cpSync(join(mediaPreviewWorker, 'src'), join(root, 'dist', 'markdown-preview-worker', 'src'), {
+fs.cpSync(join(markdownPreviewWorker, 'src'), join(root, 'dist', 'markdown-preview-worker', 'src'), {
   recursive: true,
 })
 
