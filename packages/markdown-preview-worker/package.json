@@ -29,6 +29,6 @@
     }
   },
   "dependencies": {
-    "marked": "^15.0.0"
+    "marked": "^15.0.3"
   }
 }
