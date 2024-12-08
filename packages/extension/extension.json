@@ -8,6 +8,7 @@
   "webViews": [
     {
       "id": "builtin.markdown-preview",
+      "type": "preview",
       "rpc": true,
       "path": "media/index.html",
       "selector": [".md"],
