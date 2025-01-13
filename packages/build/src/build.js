@@ -50,6 +50,12 @@ await replace({
   replacement: 'dist/markdownPreviewMain.js',
 })
 
+await replace({
+  path: join(root, 'dist', 'extension.json'),
+  occurrence: '../markdown-preview-worker/src/markdownWorkerMain.ts',
+  replacement: '../markdown-preview-worker/dist/markdownWorkerMain.js',
+})
+
 await bundleJs(
   join(root, 'dist', 'markdown-preview-worker', 'src', 'markdownPreviewWorkerMain.ts'),
   join(root, 'dist', 'markdown-preview-worker', 'dist', 'markdownPreviewWorkerMain.js'),
