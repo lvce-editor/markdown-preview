@@ -5,12 +5,21 @@
   "browser": "src/markdownPreviewMain.ts",
   "activation": ["onWebView:builtin.markdown-preview"],
   "languages": [],
+  "rpc": [
+    {
+      "id": "builtin.markdown-preview.markdown-preview-worker",
+      "type": "web-worker",
+      "name": "Markdown Preview Worker",
+      "url": "../markdown-preview-worler/src/markdownPreviewWorkerMain.ts",
+      "contentSecurityPolicy": ["default-src 'none'"]
+    }
+  ],
   "webViews": [
     {
       "id": "builtin.markdown-preview",
       "name": "Markdown Preview",
       "type": "preview",
-      "rpc": true,
+      "rpc": "builtin.markdown-preview.markdown-preview-worker",
       "path": "media/index.html",
       "selector": [".md"],
       "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "img-src 'self' https:"],
