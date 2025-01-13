@@ -1,4 +1,4 @@
-# Markdown preview
+# Markdown Preview
 
 ## Contributing
 
