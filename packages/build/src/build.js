@@ -37,25 +37,11 @@ const markedDistPath = join(root, 'dist', 'third_party', 'marked.esm.js')
 fs.mkdirSync(dirname(markedDistPath), { recursive: true })
 fs.copyFileSync(markedSrcPath, markedDistPath)
 
-const workerUrlFilePath = path.join(root, 'dist', 'src', 'parts', 'MarkdownPreviewWorkerUrl', 'MarkdownPreviewWorkerUrl.ts')
-await replace({
-  path: workerUrlFilePath,
-  occurrence: 'src/markdownPreviewWorkerMain.ts',
-  replacement: 'dist/markdownPreviewWorkerMain.js',
-})
-
 const markedUrlPath = path.join(root, 'dist', 'markdown-preview-worker', 'src', 'parts', 'MarkedUrl', 'MarkedUrl.ts')
 await replace({
   path: markedUrlPath,
   occurrence: `export const markedUrl = new URL('../../../node_modules/marked/lib/marked.esm.js', import.meta.url).toString()`,
   replacement: `export const markedUrl = new URL('../../third_party/marked.esm.js', import.meta.url).toString()`,
-})
-
-const assetDirPath = path.join(root, 'dist', 'src', 'parts', 'AssetDir', 'AssetDir.ts')
-await replace({
-  path: assetDirPath,
-  occurrence: '../../../../',
-  replacement: '../',
 })
 
 await replace({
