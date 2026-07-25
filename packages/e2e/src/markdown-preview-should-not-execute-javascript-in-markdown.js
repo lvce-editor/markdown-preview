@@ -21,6 +21,6 @@ console.log("hello world")
   await reopenPromise
 
   // assert
-  const webView = Locator('.WebView')
+  const webView = Locator('.WebViewIframe')
   await expect(webView).toBeVisible()
 }

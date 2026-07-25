@@ -21,6 +21,6 @@ export const test = async ({ Command, FileSystem, Main, Locator, QuickPick, expe
   await reopenPromise
 
   // assert
-  const webView = Locator('.WebView')
+  const webView = Locator('.WebViewIframe')
   await expect(webView).toBeVisible()
 }
