@@ -31,7 +31,7 @@ fs.cpSync(join(markdownPreviewWorker, 'src'), join(root, 'dist', 'markdown-previ
   recursive: true,
 })
 
-const markedSrcPath = join(root, 'packages', 'markdown-preview-worker', 'node_modules', 'marked', 'lib', 'marked.esm.js')
+const markedSrcPath = join(root, 'node_modules', 'marked', 'lib', 'marked.esm.js')
 const markedDistPath = join(root, 'dist', 'third_party', 'marked.esm.js')
 
 fs.mkdirSync(dirname(markedDistPath), { recursive: true })
@@ -40,7 +40,7 @@ fs.copyFileSync(markedSrcPath, markedDistPath)
 const markedUrlPath = path.join(root, 'dist', 'markdown-preview-worker', 'src', 'parts', 'MarkedUrl', 'MarkedUrl.ts')
 await replace({
   path: markedUrlPath,
-  occurrence: `export const markedUrl = new URL('../../../node_modules/marked/lib/marked.esm.js', import.meta.url).toString()`,
+  occurrence: `export const markedUrl = new URL('../../../../../node_modules/marked/lib/marked.esm.js', import.meta.url).toString()`,
   replacement: `export const markedUrl = new URL('../../third_party/marked.esm.js', import.meta.url).toString()`,
 })
 
