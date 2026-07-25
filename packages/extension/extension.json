@@ -10,7 +10,7 @@
       "id": "builtin.markdown-preview.markdown-preview-worker",
       "type": "web-worker",
       "name": "Markdown Preview Worker",
-      "url": "../markdown-preview-worler/src/markdownPreviewWorkerMain.ts",
+      "url": "../markdown-preview-worker/src/markdownPreviewWorkerMain.ts",
       "contentSecurityPolicy": ["default-src 'none'"]
     }
   ],
