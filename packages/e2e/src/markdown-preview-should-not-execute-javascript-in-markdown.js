@@ -28,8 +28,14 @@ console.log("hello world")
   )
 
   // act
-  await Command.execute('Main.openUri', `${tmpDir}/test.md`, true, {
-    opener: 'builtin.markdown-preview',
+  await Command.execute('Main.openInput', {
+    editorInput: {
+      providerId: 'builtin.markdown-preview',
+      type: 'webview',
+      uri: `${tmpDir}/test.md`,
+    },
+    focus: true,
+    preview: false,
   })
 
   // assert
