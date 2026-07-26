@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals'
-import * as Main from '../src/parts/Main/Main.js'
+import * as CommandMap from '../src/parts/CommandMap/CommandMap.js'
 
-test('main', () => {
-  expect(Main.commandMap).toBeDefined()
+test('command map', () => {
+  expect(CommandMap.commandMap).toBeDefined()
 })

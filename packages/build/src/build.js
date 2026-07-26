@@ -1,6 +1,6 @@
 import { packageExtension, bundleJs, replace } from '@lvce-editor/package-extension'
 import fs, { readFileSync } from 'node:fs'
-import path, { dirname, join } from 'node:path'
+import path, { join } from 'node:path'
 import { bundleExtensionMain } from './bundleExtensionMain.js'
 import { root } from './root.js'
 
@@ -10,9 +10,11 @@ const packageRoot = path.join(root, '.tmp', 'dist')
 
 fs.rmSync(packageRoot, { recursive: true, force: true })
 fs.rmSync(join(extension, 'dist'), { recursive: true, force: true })
+fs.rmSync(join(markdownPreviewWorker, 'dist'), { recursive: true, force: true })
 
 fs.mkdirSync(packageRoot, { recursive: true })
 fs.mkdirSync(path.join(extension, 'dist'))
+fs.mkdirSync(path.join(markdownPreviewWorker, 'dist'))
 
 const packageJson = JSON.parse(readFileSync(join(extension, 'package.json')).toString())
 delete packageJson.xo
@@ -35,24 +37,16 @@ fs.cpSync(join(markdownPreviewWorker, 'src'), join(packageRoot, 'markdown-previe
   recursive: true,
 })
 
-const markedSrcPath = join(root, 'node_modules', 'marked', 'lib', 'marked.esm.js')
-const markedDistPath = join(packageRoot, 'third_party', 'marked.esm.js')
-
-fs.mkdirSync(dirname(markedDistPath), { recursive: true })
-fs.copyFileSync(markedSrcPath, markedDistPath)
-
-const markedUrlPath = path.join(packageRoot, 'markdown-preview-worker', 'src', 'parts', 'MarkedUrl', 'MarkedUrl.ts')
-await replace({
-  path: markedUrlPath,
-  occurrence: `export const markedUrl = new URL('../../../../../node_modules/marked/lib/marked.esm.js', import.meta.url).toString()`,
-  replacement: `export const markedUrl = new URL('../../third_party/marked.esm.js', import.meta.url).toString()`,
-})
-
 await replace({
   path: join(packageRoot, 'extension.json'),
-  occurrence: '../markdown-preview-worker/src/markdownPreviewWorkerMain.ts',
+  occurrence: '../markdown-preview-worker/dist/markdownPreviewWorkerMain.js',
   replacement: 'markdown-preview-worker/dist/markdownPreviewWorkerMain.js',
 })
+
+await bundleJs(
+  join(markdownPreviewWorker, 'src', 'markdownPreviewWorkerMain.ts'),
+  join(markdownPreviewWorker, 'dist', 'markdownPreviewWorkerMain.js'),
+)
 
 await bundleJs(
   join(packageRoot, 'markdown-preview-worker', 'src', 'markdownPreviewWorkerMain.ts'),

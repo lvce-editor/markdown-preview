@@ -10,9 +10,9 @@
   "rpc": [
     {
       "id": "builtin.markdown-preview.markdown-preview-worker",
-      "type": "web-worker",
+      "type": "web-worker-2",
       "name": "Markdown Preview Worker",
-      "url": "../markdown-preview-worker/src/markdownPreviewWorkerMain.ts",
+      "url": "../markdown-preview-worker/dist/markdownPreviewWorkerMain.js",
       "contentSecurityPolicy": ["default-src 'none'"]
     }
   ],
@@ -22,7 +22,6 @@
       "name": "Markdown Preview",
       "type": "preview",
       "rpc": "builtin.markdown-preview.markdown-preview-worker",
-      "path": "media/index.html",
       "selector": [".md"],
       "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "img-src 'self' https:"],
       "elements": [
