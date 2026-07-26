@@ -1,6 +1,20 @@
 export const name = 'markdown-preview'
 
-export const test = async ({ Command, FileSystem, Main, Locator, QuickPick, expect }) => {
+const waitForVisible = async (locator, expect) => {
+  let lastError
+  for (let i = 0; i < 20; i++) {
+    try {
+      await expect(locator).toBeVisible()
+      return
+    } catch (error) {
+      lastError = error
+      await new Promise((resolve) => setTimeout(resolve, 50))
+    }
+  }
+  throw lastError
+}
+
+export const test = async ({ Command, FileSystem, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -14,13 +28,11 @@ console.log("hello world")
   )
 
   // act
-  await Main.openUri(`${tmpDir}/test.md`)
-  const reopenPromise = Command.execute('Main.reopenEditorWith')
-  await expect(Locator('.QuickPick')).toBeVisible()
-  await QuickPick.selectItem('Markdown Preview')
-  await reopenPromise
+  await Command.execute('Main.openUri', `${tmpDir}/test.md`, true, {
+    opener: 'builtin.markdown-preview',
+  })
 
   // assert
   const webView = Locator('.WebViewIframe')
-  await expect(webView).toBeVisible()
+  await waitForVisible(webView, expect)
 }

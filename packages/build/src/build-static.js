@@ -6,7 +6,7 @@ import { root } from './root.js'
 
 await import('./build.js')
 
-await cp(path.join(root, 'dist'), path.join(root, 'dist2'), {
+await cp(path.join(root, '.tmp', 'dist'), path.join(root, 'dist2'), {
   recursive: true,
   force: true,
 })
