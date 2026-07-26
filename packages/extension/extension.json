@@ -2,7 +2,9 @@
   "id": "builtin.markdown-preview",
   "name": "Markdown Preview",
   "description": "Markdown Preview",
-  "browser": "src/markdownPreviewMain.ts",
+  "browser": "dist/markdownPreviewMain.js",
+  "isolated": true,
+  "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"],
   "activation": ["onWebView:builtin.markdown-preview"],
   "languages": [],
   "rpc": [

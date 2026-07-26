@@ -10,7 +10,9 @@
   "keywords": [],
   "author": "",
   "type": "module",
-  "devDependencies": {},
+  "devDependencies": {
+    "@lvce-editor/api": "^8.64.0"
+  },
   "jest": {
     "injectGlobals": false,
     "extensionsToTreatAsEsm": [
