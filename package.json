@@ -14,7 +14,8 @@
     "e2e": "npm run build && npm run e2e --workspace=e2e",
     "e2e:headless": "npm run build && npm run e2e:headless --workspace=e2e",
     "build": "node packages/build/src/build.js",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "lint": "knip --no-config-hints"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "@lvce-editor/server": "0.94.2",
     "@types/node": "^22.10.6",
     "jest": "^29.7.0",
+    "knip": "^6.29.0",
     "prettier": "^3.4.2",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.0"
