@@ -23,7 +23,15 @@
       "type": "preview",
       "rpc": "builtin.markdown-preview.markdown-preview-worker",
       "selector": [".md"],
-      "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'", "style-src 'self'", "img-src 'self' https:"],
+      "contentSecurityPolicy": [
+        "default-src 'none'",
+        "script-src 'self'",
+        "style-src 'self'",
+        "img-src 'self' https:",
+        "base-uri 'none'",
+        "form-action 'none'",
+        "object-src 'none'"
+      ],
       "elements": [
         {
           "type": "title",
