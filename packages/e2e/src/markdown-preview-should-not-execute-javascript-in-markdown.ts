@@ -1,3 +1,7 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
+export const name = 'markdown-preview'
+
 const waitForVisible = async (locator, expect) => {
   let lastError
   for (let i = 0; i < 20; i++) {
@@ -12,20 +16,31 @@ const waitForVisible = async (locator, expect) => {
   throw lastError
 }
 
-export const openMarkdownPreview = async ({ Command, FileSystem, Locator, expect }, markdown) => {
+export const test: Test = async ({ Command, FileSystem, Locator, expect }) => {
+  // arrange
   const tmpDir = await FileSystem.getTmpDir()
-  const uri = `${tmpDir}/test.md`
-  await FileSystem.writeFile(uri, markdown)
+  await FileSystem.writeFile(
+    `${tmpDir}/test.md`,
+    `## test markdown
+
+<script>
+console.log("hello world")
+</script>
+`,
+  )
+
+  // act
   await Command.execute('Main.openInput', {
     editorInput: {
       providerId: 'builtin.markdown-preview',
       type: 'webview',
-      uri,
+      uri: `${tmpDir}/test.md`,
     },
     focus: true,
     preview: false,
   })
+
+  // assert
   const webView = Locator('.WebViewIframe')
   await waitForVisible(webView, expect)
-  await expect(webView).toHaveAttribute('title', 'Markdown Preview')
 }

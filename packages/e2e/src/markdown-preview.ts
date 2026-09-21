@@ -1,3 +1,5 @@
+import type { Test } from '@lvce-editor/test-with-playwright'
+
 export const name = 'markdown-preview'
 
 const waitForVisible = async (locator, expect) => {
@@ -14,7 +16,7 @@ const waitForVisible = async (locator, expect) => {
   throw lastError
 }
 
-export const test = async ({ Command, FileSystem, Locator, expect }) => {
+export const test: Test = async ({ Command, FileSystem, Locator, expect }) => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
