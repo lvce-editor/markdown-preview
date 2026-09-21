@@ -53,10 +53,7 @@ await bundleJs(
   join(packageRoot, 'markdown-preview-worker', 'dist', 'markdownPreviewWorkerMain.js'),
 )
 
-await bundleExtensionMain(
-  join(extension, 'src', 'markdownPreviewMain.ts'),
-  join(extension, 'dist', 'markdownPreviewMain.js'),
-)
+await bundleExtensionMain(join(extension, 'src', 'markdownPreviewMain.ts'), join(extension, 'dist', 'markdownPreviewMain.js'))
 fs.cpSync(join(extension, 'dist'), join(packageRoot, 'dist'), {
   recursive: true,
 })

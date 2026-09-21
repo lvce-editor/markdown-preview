@@ -28,25 +28,25 @@ export const create2 = async ({ port, uri }) => {
       return updatePromise
     }
     updatePromise = (async () => {
-    try {
-      const nextTextDocument = await getTextDocument(uri)
-      if (!nextTextDocument) {
-        return
-      }
-      textDocument = nextTextDocument
-      if (textDocument.text !== content) {
-        content = textDocument.text
-        const version = ++renderVersion
-        const next = await Render.render(content)
-        if (version === renderVersion) {
-          await port.invoke('update', { ...next, uri, scroll: textDocument })
+      try {
+        const nextTextDocument = await getTextDocument(uri)
+        if (!nextTextDocument) {
+          return
         }
-      } else {
-        await port.invoke('updateScroll', textDocument)
+        textDocument = nextTextDocument
+        if (textDocument.text !== content) {
+          content = textDocument.text
+          const version = ++renderVersion
+          const next = await Render.render(content)
+          if (version === renderVersion) {
+            await port.invoke('update', { ...next, uri, scroll: textDocument })
+          }
+        } else {
+          await port.invoke('updateScroll', textDocument)
+        }
+      } catch {
+        clearInterval(timer)
       }
-    } catch {
-      clearInterval(timer)
-    }
     })().finally(() => {
       updatePromise = undefined
     })

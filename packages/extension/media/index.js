@@ -68,7 +68,7 @@ const patch = (parent, oldVdom, newVdom, oldElement) => {
   updateAttributes(oldElement, oldVdom.attributes, newVdom.attributes)
   const oldChildren = oldVdom.children || []
   const newChildren = newVdom.children || []
-  const childElements = Array.from(oldElement.childNodes)
+  const childElements = [...oldElement.childNodes]
   const length = Math.max(oldChildren.length, newChildren.length)
   for (let i = 0; i < length; i++) {
     patch(oldElement, oldChildren[i], newChildren[i], childElements[i])
