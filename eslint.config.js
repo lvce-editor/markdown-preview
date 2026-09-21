@@ -15,6 +15,13 @@ export default defineConfig([
     },
   },
   {
+    files: ['.github/workflows/pr.yml', '.github/workflows/ci.yml'],
+    rules: {
+      // These job names are part of the protected branch's required-check contract.
+      'github-actions/ci-versions': 'off',
+    },
+  },
+  {
     files: ['packages/e2e/**/*.ts'],
     rules: {
       'e2e/no-imports': 'off',
