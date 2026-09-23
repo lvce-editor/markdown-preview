@@ -6,17 +6,21 @@ interface TextDocument {
   readonly text: string
 }
 
-export const createInstance = async (context?: ViewContext) => {
-  const uri = (context as (ViewContext & { readonly uri?: string }) | undefined)?.uri
+const getDocument = async (): Promise<TextDocument | undefined> => {
+  return (await executeCommand('GetActiveEditor.getTextDocument')) as TextDocument | undefined
+}
+
+const defaultDependencies = { getDocument, readFile }
+
+export const createInstance = async (context?: ViewContext & { readonly uri?: string }, dependencies = defaultDependencies) => {
+  const uri = context?.uri
   if (!uri || !context) {
     throw new Error('Markdown preview requires a document URI')
   }
-  const getDocument = async (): Promise<TextDocument | undefined> => {
-    return (await executeCommand('GetActiveEditor.getTextDocument')) as TextDocument | undefined
-  }
-  const document = await getDocument()
-  let content = document?.uri === uri ? document.text : await readFile(uri)
-  let dom = toVirtualDom((await render(content)).dom)
+  const document = await dependencies.getDocument()
+  let content = document?.uri === uri ? document.text : await dependencies.readFile(uri)
+  const initialResult = await render(content)
+  let dom = toVirtualDom(initialResult.dom)
   let disposed = false
   let updating = false
   const update = async (): Promise<void> => {
@@ -25,16 +29,16 @@ export const createInstance = async (context?: ViewContext) => {
     }
     updating = true
     try {
-      const document = await getDocument()
+      const document = await dependencies.getDocument()
       if (disposed || document?.uri !== uri || document.text === content) {
         return
       }
-      const nextDom = toVirtualDom((await render(document.text)).dom)
+      const result = await render(document.text)
       if (disposed) {
         return
       }
       content = document.text
-      dom = nextDom
+      dom = toVirtualDom(result.dom)
       await context.requestRerender()
     } finally {
       updating = false

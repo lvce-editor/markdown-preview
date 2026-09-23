@@ -3,18 +3,21 @@ import { openMarkdownPreview } from './_markdown-preview.ts'
 
 export const name = 'markdown-preview-documents'
 
-export const test: Test = async (api) => {
-  const { Main, Command, Locator, expect } = api
-  const firstUri = await openMarkdownPreview(api, '# First document', 'first.md')
-  await expect(Locator('.MarkdownPreview h1')).toHaveText('First document')
-  await openMarkdownPreview(api, '# Second document', 'second.md')
-  await expect(Locator('.MarkdownPreview h1')).toHaveText('Second document')
+export const test: Test = async ({ FileSystem, Main, Command, Locator, expect }) => {
+  const firstUri = await openMarkdownPreview({ FileSystem, Command, Locator, expect }, '# First document', 'first.md')
+  const element1 = Locator('.MarkdownPreview h1')
+  await expect(element1).toHaveText('First document')
+  await openMarkdownPreview({ FileSystem, Command, Locator, expect }, '# Second document', 'second.md')
+  const element2 = Locator('.MarkdownPreview h1')
+  await expect(element2).toHaveText('Second document')
   await Main.closeAllEditors()
   await Command.execute('Main.openInput', {
     editorInput: { providerId: 'builtin.markdown-preview', type: 'webview', uri: firstUri },
     focus: true,
     preview: false,
   })
-  await expect(Locator('.MarkdownPreview h1')).toHaveText('First document')
-  await expect(Locator('.WebViewIframe')).toHaveCount(0)
+  const element3 = Locator('.MarkdownPreview h1')
+  await expect(element3).toHaveText('First document')
+  const element4 = Locator('.WebViewIframe')
+  await expect(element4).toHaveCount(0)
 }

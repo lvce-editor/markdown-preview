@@ -1,6 +1,6 @@
 import type { Test } from '@lvce-editor/test-with-playwright'
 
-type TestApi = Parameters<Test>[0]
+type TestApi = Pick<Parameters<Test>[0], 'FileSystem' | 'Command' | 'Locator' | 'expect'>
 
 export const openMarkdownPreview = async (
   { FileSystem, Command, Locator, expect }: TestApi,
@@ -15,7 +15,9 @@ export const openMarkdownPreview = async (
     focus: true,
     preview: false,
   })
-  await expect(Locator('.MarkdownPreview')).toBeVisible()
-  await expect(Locator('.WebViewIframe')).toHaveCount(0)
+  const element1 = Locator('.MarkdownPreview')
+  await expect(element1).toBeVisible()
+  const element2 = Locator('.WebViewIframe')
+  await expect(element2).toHaveCount(0)
   return uri
 }

@@ -1,9 +1,10 @@
 import { afterEach, expect, jest, test } from '@jest/globals'
 
-const executeCommand = jest.fn<() => Promise<unknown>>()
+import { createInstance } from '../src/parts/CreateInstance/CreateInstance.ts'
+
+const getDocument = jest.fn<() => Promise<{ uri: string; text: string } | undefined>>()
 const readFile = jest.fn<(uri: string) => Promise<string>>()
-jest.unstable_mockModule('@lvce-editor/api', () => ({ executeCommand, readFile }))
-const { createInstance } = await import('../src/parts/CreateInstance/CreateInstance.ts')
+const dependencies = { getDocument, readFile }
 
 const context = (uri: string) => ({
   uri,
@@ -20,25 +21,20 @@ afterEach(() => {
 
 test('keeps instances independent and ignores in-flight updates after disposal', async () => {
   jest.useFakeTimers()
-  executeCommand.mockResolvedValue(undefined)
+  getDocument.mockResolvedValue(undefined)
   readFile.mockImplementation(async (uri) => `# ${uri}`)
   const firstContext = context('first.md')
-  const first = await createInstance(firstContext)
-  const second = await createInstance(context('second.md'))
+  const first = await createInstance(firstContext, dependencies)
+  const second = await createInstance(context('second.md'), dependencies)
   expect(first.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'first.md' })]))
   expect(second.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'second.md' })]))
-  executeCommand.mockResolvedValue({ uri: 'first.md', text: '# Unsaved changes' })
+  getDocument.mockResolvedValue({ uri: 'first.md', text: '# Unsaved changes' })
   await jest.advanceTimersByTimeAsync(150)
   expect(first.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Unsaved changes' })]))
   expect(second.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'second.md' })]))
   expect(firstContext.requestRerender).toHaveBeenCalledTimes(1)
-  let resolve: (value: unknown) => void = () => {}
-  executeCommand.mockImplementation(
-    () =>
-      new Promise((done) => {
-        resolve = done
-      }),
-  )
+  const { promise, resolve } = Promise.withResolvers<{ uri: string; text: string }>()
+  getDocument.mockReturnValue(promise)
   second.dispose()
   await jest.advanceTimersByTimeAsync(150)
   first.dispose()
