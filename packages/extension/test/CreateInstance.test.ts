@@ -1,0 +1,45 @@
+import { afterEach, expect, jest, test } from '@jest/globals'
+
+import { createInstance } from '../src/parts/CreateInstance/CreateInstance.ts'
+
+const getDocument = jest.fn<() => Promise<{ uri: string; text: string } | undefined>>()
+const readFile = jest.fn<(uri: string) => Promise<string>>()
+const dependencies = { getDocument, readFile }
+
+const context = (uri: string) => ({
+  uri,
+  uid: 1,
+  viewId: 'builtin.markdown-preview',
+  requestRerender: jest.fn<() => Promise<void>>(),
+  showContextMenu: jest.fn<() => Promise<void>>(),
+})
+
+afterEach(() => {
+  jest.useRealTimers()
+  jest.resetAllMocks()
+})
+
+test('keeps instances independent and ignores in-flight updates after disposal', async () => {
+  jest.useFakeTimers()
+  getDocument.mockResolvedValue(undefined)
+  readFile.mockImplementation(async (uri) => `# ${uri}`)
+  const firstContext = context('first.md')
+  const first = await createInstance(firstContext, dependencies)
+  const second = await createInstance(context('second.md'), dependencies)
+  expect(first.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'first.md' })]))
+  expect(second.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'second.md' })]))
+  getDocument.mockResolvedValue({ uri: 'first.md', text: '# Unsaved changes' })
+  await jest.advanceTimersByTimeAsync(150)
+  expect(first.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Unsaved changes' })]))
+  expect(second.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'second.md' })]))
+  expect(firstContext.requestRerender).toHaveBeenCalledTimes(1)
+  const { promise, resolve } = Promise.withResolvers<{ uri: string; text: string }>()
+  getDocument.mockReturnValue(promise)
+  second.dispose()
+  await jest.advanceTimersByTimeAsync(150)
+  first.dispose()
+  resolve({ uri: 'first.md', text: '# Too late' })
+  await jest.advanceTimersByTimeAsync(150)
+  expect(firstContext.requestRerender).toHaveBeenCalledTimes(1)
+  expect(jest.getTimerCount()).toBe(0)
+})

@@ -14,12 +14,8 @@
       "project": ["src/**/*.js"]
     },
     "packages/extension": {
-      "entry": ["src/markdownPreviewMain.ts"],
+      "entry": ["src/markdownPreviewMain.ts", "test/**/*.test.ts"],
       "project": ["src/**/*.ts"]
-    },
-    "packages/markdown-preview-worker": {
-      "entry": ["src/markdownPreviewWorkerMain.ts", "test/**/*.test.ts"],
-      "project": ["src/**/*.ts", "test/**/*.ts"]
     }
   }
 }

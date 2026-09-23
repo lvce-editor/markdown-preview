@@ -1,4 +1,5 @@
 import { parse } from 'marked'
+import { text, VirtualDomElements, type VirtualDomNode as FlatNode } from '@lvce-editor/virtual-dom-worker'
 
 type Attributes = Record<string, string | boolean>
 
@@ -54,7 +55,7 @@ const allowedTags = new Set([
   'ul',
 ])
 
-const allowedAttributes = new Set(['alt', 'checked', 'class', 'disabled', 'href', 'rel', 'src', 'target', 'title', 'type'])
+const allowedAttributes = new Set(['alt', 'checked', 'disabled', 'href', 'rel', 'src', 'title', 'type'])
 const voidTags = new Set(['br', 'hr', 'img', 'input'])
 
 const decodeHtml = (value: string): string => {
@@ -98,6 +99,8 @@ const parseAttributes = (source: string): Attributes => {
     if (allowedAttributes.has(normalizedName)) {
       if (normalizedName === 'href' && isSafeUrl(value, false)) {
         attributes.href = decodeHtml(value)
+        attributes.target = '_blank'
+        attributes.rel = 'noopener noreferrer'
       } else if (normalizedName === 'src' && isSafeUrl(value, true)) {
         attributes.src = decodeHtml(value)
       } else if (normalizedName !== 'href' && normalizedName !== 'src') {
@@ -166,6 +169,10 @@ const parseHtml = (html: string): VirtualDomNode[] => {
           attributes: parseAttributes(token.slice(tag.length + 1, -1)),
           children: [],
         }
+        if (tag === 'input') {
+          node.attributes.type = 'checkbox'
+          node.attributes.disabled = true
+        }
         stack.at(-1)?.children.push(node)
         if (!voidTags.has(tag) && !token.endsWith('/>')) {
           stack.push({ tag, children: node.children as VirtualDomNode[] })
@@ -185,8 +192,20 @@ export const render = async (content: string): Promise<RenderResult> => {
   const dom: VirtualDomElementNode = {
     type: 'element',
     tag: 'div',
-    attributes: { className: 'Markdown', role: 'document' },
+    attributes: { className: 'MarkdownPreview', role: 'document' },
     children: parseHtml(html),
   }
   return { dom, sourceLineCount: content.split('\n').length }
+}
+
+const elementTypes = Object.fromEntries(Object.entries(VirtualDomElements).map(([name, type]) => [name.toLowerCase(), type]))
+
+export const toVirtualDom = (node: VirtualDomNode): readonly FlatNode[] => {
+  if (node.type === 'text') {
+    return [text(node.value)]
+  }
+  return [
+    { ...node.attributes, type: elementTypes[node.tag], childCount: node.children.length },
+    ...node.children.flatMap(toVirtualDom),
+  ]
 }
