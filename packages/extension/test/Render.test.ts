@@ -43,3 +43,13 @@ test('rejects encoded and whitespace-obfuscated unsafe urls', async () => {
 test('does not throw on malformed numeric entities', async () => {
   await expect(Render.render('&#99999999;')).resolves.toBeDefined()
 })
+
+test('strips application classes and active elements before entering the editor DOM', async () => {
+  const result = await Render.render(
+    '<div class="Viewlet Editor" style="position:fixed" onclick="bad()"><input type="image" src="https://example.com/x"><iframe srcdoc="bad"></iframe></div>',
+  )
+  const nodes = Render.toVirtualDom(result.dom)
+  expect(nodes.every((node) => typeof node.type === 'number')).toBe(true)
+  expect(nodes.some((node) => node.className === 'Viewlet Editor' || node.style || node.onclick || node.srcdoc)).toBe(false)
+  expect(nodes.some((node) => node.disabled === true)).toBe(true)
+})

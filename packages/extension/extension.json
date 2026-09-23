@@ -5,51 +5,17 @@
   "browser": "dist/markdownPreviewMain.js",
   "isolated": true,
   "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"],
-  "activation": ["onWebView:builtin.markdown-preview"],
+  "activation": ["onView:builtin.markdown-preview"],
   "languages": [],
-  "rpc": [
-    {
-      "id": "builtin.markdown-preview.markdown-preview-worker",
-      "type": "web-worker-2",
-      "name": "Markdown Preview Worker",
-      "url": "../markdown-preview-worker/dist/markdownPreviewWorkerMain.js",
-      "contentSecurityPolicy": ["default-src 'none'"]
-    }
-  ],
-  "webViews": [
+  "views": [
     {
       "id": "builtin.markdown-preview",
-      "name": "Markdown Preview",
+      "title": "Markdown Preview",
+      "kind": "virtualDom",
       "type": "preview",
-      "rpc": "builtin.markdown-preview.markdown-preview-worker",
       "selector": [".md"],
-      "contentSecurityPolicy": [
-        "default-src 'none'",
-        "script-src 'self'",
-        "style-src 'self'",
-        "img-src 'self' https:",
-        "base-uri 'none'",
-        "form-action 'none'",
-        "object-src 'none'"
-      ],
-      "elements": [
-        {
-          "type": "title",
-          "value": "Markdown Preview"
-        },
-        {
-          "type": "script",
-          "path": "media/index.js"
-        },
-        {
-          "type": "css",
-          "path": "media/markdown.css"
-        },
-        {
-          "type": "css",
-          "path": "media/index.css"
-        }
-      ]
+      "preferredLocation": "preview",
+      "css": "media/markdown.css"
     }
   ]
 }
