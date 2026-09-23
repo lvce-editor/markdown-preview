@@ -35,12 +35,6 @@ export default defineConfig([
     },
   },
   {
-    files: ['packages/integration/test/**/*.ts'],
-    rules: {
-      'jest/no-disabled-tests': 'off',
-    },
-  },
-  {
     rules: {
       'e18e/prefer-spread-syntax': 'off',
     },
