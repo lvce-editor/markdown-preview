@@ -17,10 +17,6 @@
       "entry": ["src/markdownPreviewMain.ts"],
       "project": ["src/**/*.ts"]
     },
-    "packages/integration": {
-      "entry": ["test/**/*.test.ts"],
-      "project": ["src/**/*.ts", "test/**/*.ts"]
-    },
     "packages/markdown-preview-worker": {
       "entry": ["src/markdownPreviewWorkerMain.ts", "test/**/*.test.ts"],
       "project": ["src/**/*.ts", "test/**/*.ts"]
