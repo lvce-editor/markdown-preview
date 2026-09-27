@@ -16,6 +16,15 @@
   },
   "jest": {
     "injectGlobals": false,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "<rootDir>/src/**/*.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90
+      }
+    },
     "extensionsToTreatAsEsm": [
       ".ts"
     ],

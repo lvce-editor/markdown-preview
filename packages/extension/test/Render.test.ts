@@ -53,3 +53,40 @@ test('strips application classes and active elements before entering the editor 
   expect(nodes.some((node) => node.className === 'Viewlet Editor' || node.style || node.onclick || node.srcdoc)).toBe(false)
   expect(nodes.some((node) => node.disabled === true)).toBe(true)
 })
+
+test('parses entities, safe links, images, and ordinary attributes', async () => {
+  const result = await Render.render(
+    '<p title="title" checked class="ignored">&#65; &#x42; &#99999999; &amp; &unknown;</p><a href="mailto:test@example.com">mail</a><a href="ftp://example.com">bad</a><img src="https://example.com/a"><img src="/a"><img src="./a"><img src="../a"><img src="relative.png">',
+  )
+  const nodes = flatten(result.dom)
+  expect(nodes.some((node) => node.type === 'text' && node.value.includes('A B &#99999999; & &unknown;'))).toBe(true)
+  expect(nodes.some((node) => node.tag === 'p' && node.attributes.title === 'title' && node.attributes.checked === true)).toBe(
+    true,
+  )
+  expect(nodes.some((node) => node.tag === 'a' && node.attributes.href === 'mailto:test@example.com')).toBe(true)
+  expect(nodes.some((node) => node.tag === 'a' && !node.attributes.href)).toBe(true)
+  expect(nodes.filter((node) => node.tag === 'img' && node.attributes.src).map((node) => node.attributes.src)).toEqual([
+    'https://example.com/a',
+    '/a',
+    './a',
+    '../a',
+  ])
+})
+
+test('handles malformed tags, comments, ignored elements, and self-closing elements', async () => {
+  const result = await Render.render(
+    '<!-- hidden --><div>before < 3 <b/> after</div><unknown>hidden</unknown><br/><p>tail</p></></oops>',
+  )
+  const nodes = flatten(result.dom)
+  expect(nodes.some((node) => node.type === 'text' && node.value.includes('before'))).toBe(true)
+  expect(nodes.some((node) => node.tag === 'unknown')).toBe(false)
+  expect(nodes.some((node) => node.type === 'text' && node.value.includes('hidden'))).toBe(true)
+  expect(nodes.some((node) => node.tag === 'br')).toBe(true)
+})
+
+test('preserves relative links and rejects empty or unsupported protocols', async () => {
+  const result = await Render.render('<a href="/page">root</a><a href="">empty</a><a href="custom:thing">custom</a>')
+  const links = flatten(result.dom).filter((node) => node.tag === 'a')
+  expect(links[0].attributes).toMatchObject({ href: '/page', target: '_blank', rel: 'noopener noreferrer' })
+  expect(links.slice(1).every((node) => !node.attributes.href)).toBe(true)
+})
