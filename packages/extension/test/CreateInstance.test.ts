@@ -43,3 +43,40 @@ test('keeps instances independent and ignores in-flight updates after disposal',
   expect(firstContext.requestRerender).toHaveBeenCalledTimes(1)
   expect(jest.getTimerCount()).toBe(0)
 })
+
+test('requires a context with a document URI', async () => {
+  await expect(createInstance()).rejects.toThrow('Markdown preview requires a document URI')
+  await expect(createInstance(context(''))).rejects.toThrow('Markdown preview requires a document URI')
+})
+
+test('uses the active document when its URI matches and ignores unchanged or unrelated updates', async () => {
+  jest.useFakeTimers()
+  getDocument.mockResolvedValue({ uri: 'active.md', text: '# Active document' })
+  const instance = await createInstance(context('active.md'), dependencies)
+  expect(readFile).not.toHaveBeenCalled()
+  expect(instance.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Active document' })]))
+  getDocument.mockResolvedValue({ uri: 'other.md', text: '# Other document' })
+  await jest.advanceTimersByTimeAsync(150)
+  expect(instance.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Active document' })]))
+  getDocument.mockResolvedValue({ uri: 'active.md', text: '# Active document' })
+  await jest.advanceTimersByTimeAsync(150)
+  expect(instance.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Active document' })]))
+  instance.dispose()
+  expect(jest.getTimerCount()).toBe(0)
+})
+
+test('clears its update lock after dependency errors', async () => {
+  jest.useFakeTimers()
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  readFile.mockResolvedValue('# Initial content')
+  getDocument
+    .mockResolvedValueOnce(undefined)
+    .mockRejectedValueOnce(new Error('temporary failure'))
+    .mockResolvedValue({ uri: 'retry.md', text: '# Retry succeeded' })
+  const instance = await createInstance(context('retry.md'), dependencies)
+  await jest.advanceTimersByTimeAsync(150)
+  await jest.advanceTimersByTimeAsync(150)
+  expect(instance.render()).toEqual(expect.arrayContaining([expect.objectContaining({ text: 'Retry succeeded' })]))
+  instance.dispose()
+  errorSpy.mockRestore()
+})

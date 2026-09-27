@@ -118,9 +118,6 @@ const getTagName = (source: string): string => {
 }
 
 const appendText = (children: VirtualDomNode[], value: string): void => {
-  if (!value) {
-    return
-  }
   const text = decodeHtml(value)
   const previous = children.at(-1)
   if (previous?.type === 'text') {
@@ -144,7 +141,7 @@ const parseHtml = (html: string): VirtualDomNode[] => {
     if (token.startsWith('</')) {
       const tag = getTagName(token)
       if (!tag) {
-        appendText(stack.at(-1)?.children || root, token)
+        appendText(stack.at(-1)!.children, token)
         match = tokenPattern.exec(html)
         continue
       }
@@ -158,7 +155,7 @@ const parseHtml = (html: string): VirtualDomNode[] => {
     if (token.startsWith('<')) {
       const tag = getTagName(token)
       if (!tag) {
-        appendText(stack.at(-1)?.children || root, token)
+        appendText(stack.at(-1)!.children, token)
         match = tokenPattern.exec(html)
         continue
       }
@@ -181,7 +178,7 @@ const parseHtml = (html: string): VirtualDomNode[] => {
       match = tokenPattern.exec(html)
       continue
     }
-    appendText(stack.at(-1)?.children || root, token)
+    appendText(stack.at(-1)!.children, token)
     match = tokenPattern.exec(html)
   }
   return root
